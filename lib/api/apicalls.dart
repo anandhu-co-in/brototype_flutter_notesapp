@@ -1,8 +1,9 @@
 import 'dart:convert';
-
-import 'package:brototype_notes_app/api/models/note_model.dart';
+import 'package:brototype_notes_app/all_notes_model/all_notes_model.dart';
 import 'package:brototype_notes_app/api/url.dart';
+import 'package:brototype_notes_app/note_model/note_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class ApiCalls{
   Future<NoteModel?> createNote(NoteModel value);
@@ -14,42 +15,76 @@ abstract class ApiCalls{
 
 class NotesDB extends ApiCalls{
 
+
+  //Single Ton
+  NotesDB._internal();
+  static NotesDB instance = NotesDB._internal();
+  factory(){
+    return instance;
+  }
+  //End Singleton
+
+
+
   final dio=Dio();
   final url=Url();
 
+  ValueNotifier<List<NoteModel>> noteListNotifier = ValueNotifier([]);
+
   NotesDB(){
     dio.options=BaseOptions(
-      responseType: ResponseType.plain
+      responseType: ResponseType.plain,
+      baseUrl: url.baseUrl
     );
   }
 
   @override
   Future<NoteModel?> createNote(NoteModel value) async{
-    final result = await dio.post(url.baseUrl+url.createNote,data: value.toJson());
-    final resultAsJson=jsonDecode(result.data) as Map<String,dynamic>;
-    return NoteModel.fromJson(resultAsJson);
+
+    try{
+      final result = await dio.post(url.createNote,data: value.toJson());
+      final resultAsJson=jsonDecode(result.data);
+      getAllNotes();
+      return NoteModel.fromJson(resultAsJson as Map<String,dynamic>);
+    }on DioError catch(e){
+      print(e.response?.data);
+      return null;
+    }
   }
 
   @override
   Future<List<NoteModel>> getAllNotes() async{
-    print("---------");
-    final result = await dio.get(url.baseUrl+url.getAllNotes);
-    print("---------x");
+
+    // print("Calling api------------");
+    final result = await dio.get("http://10.0.2.2:3000/note/getall");
+    // print("Called api------------");
+    // print(result);
+    print(dio.toString());
     if (result.data!=null){
-      final resultAsJson=jsonDecode(result.data) as Map<String,dynamic>;
-      final notesResponse=NotesResponse.fromJson(resultAsJson);
-      return notesResponse.data!;
+      final notesResponse=AllNotesModel.fromJson(result.data);
+      noteListNotifier.value.clear();
+      print("Note  response data");
+      print(notesResponse.data);
+      noteListNotifier.value.addAll(notesResponse.data);
+      print("Notes listener values-------");
+      print(noteListNotifier.value);
+      noteListNotifier.notifyListeners();
+      return notesResponse.data;
     }
     else{
+      noteListNotifier.value.clear();
+      noteListNotifier.notifyListeners;
       return [];
     }
   }
 
 
 
+
+
   @override
   Future<NoteModel?> updateNote(NoteModel value) async{
-    final result = await dio.put<NoteModel>(url.baseUrl+url.updateNote);
+    final result = await dio.put<NoteModel>(url.updateNote);
     return NoteModel.fromJson(result.data as Map<String,dynamic>);
   }
 

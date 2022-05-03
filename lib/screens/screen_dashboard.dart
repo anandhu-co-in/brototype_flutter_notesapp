@@ -1,53 +1,40 @@
 import 'package:brototype_notes_app/api/apicalls.dart';
-import 'package:brototype_notes_app/api/models/note_model.dart';
+import 'package:brototype_notes_app/note_model/note_model.dart';
 import 'package:brototype_notes_app/screens/screen_add_edit_note.dart';
 import 'package:flutter/material.dart';
 
-class ScreenDashBoard extends StatefulWidget {
-  const ScreenDashBoard({Key? key}) : super(key: key);
-
-  @override
-  State<ScreenDashBoard> createState() => _ScreenDashBoardState();
-}
-
-class _ScreenDashBoardState extends State<ScreenDashBoard> {
-  List<Widget> notes = [AddNoteTile()];
-
-  @override
-  void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      print("Called-------<>");
-      final _noteList = await NotesDB().getAllNotes();
-      print(_noteList);
-
-      List<Widget> temp=[];
-      temp.addAll([AddNoteTile()]);
-      temp.addAll(List.generate(
-          _noteList.length,
-              (index) => NoteTile(
-            note: _noteList[index],
-          )));
-
-      setState(() {
-        notes=temp;
-      });
-    });
-    super.initState();
-  }
+class ScreenDashBoard extends StatelessWidget {
+  ScreenDashBoard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      final _noteList = await NotesDB.instance.getAllNotes();
+      // print(_noteList);
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
       ),
       body: SafeArea(
-        child: GridView.count(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            padding: EdgeInsets.all(10),
-            children: notes),
+        child: ValueListenableBuilder(
+            valueListenable: NotesDB.instance.noteListNotifier,
+            builder:
+                (BuildContext context, List<NoteModel> notemodels, Widget? _) {
+              print("Called Value Listenable----------------- ");
+              print(notemodels);
+
+              List<Widget> notes = [AddNoteTile()];
+              notes.addAll(notemodels.reversed.map((e) => NoteTile(note: e)).toList());
+
+              return GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  padding: EdgeInsets.all(10),
+                  children: notes);
+            }),
       ),
     );
   }

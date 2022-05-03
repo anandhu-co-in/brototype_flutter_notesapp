@@ -1,5 +1,5 @@
 import 'package:brototype_notes_app/api/apicalls.dart';
-import 'package:brototype_notes_app/api/models/note_model.dart';
+import 'package:brototype_notes_app/note_model/note_model.dart';
 import 'package:flutter/material.dart';
 
 enum ActionType { addNote, editNote }
@@ -26,7 +26,7 @@ class ScreenAddEditNote extends StatelessWidget {
                 switch (type) {
                   case ActionType.addNote:
                     final newNote = NoteModel.create(
-                        Id: DateTime.now().microsecondsSinceEpoch.toString(),
+                        id: DateTime.now().microsecondsSinceEpoch.toString(),
                         title: titleController.text,
                         content: contentController.text);
                     final result = await NotesDB().createNote(newNote);
@@ -34,7 +34,7 @@ class ScreenAddEditNote extends StatelessWidget {
                       print("Note Added");
                       Navigator.of(context).pop();
                     }else{
-                      print("response null");
+                      print("response null. Errordddddssss saving note");
                     }
                     break;
                   case ActionType.editNote:

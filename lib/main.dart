@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ScreenDashBoard(),
+      home: ScreenDashBoard(),
       routes: {ScreenAddEditNote.routeName: (ctx) => ScreenAddEditNote()}
     );
   }
