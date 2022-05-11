@@ -13,30 +13,30 @@ abstract class ApiCalls{
 }
 
 
+
+
 class NotesDB extends ApiCalls{
 
+  ValueNotifier<List<NoteModel>> noteListNotifier = ValueNotifier([]);
 
   //Single Ton
-  NotesDB._internal();
+  NotesDB._internal(){
+    this.dio.options=BaseOptions(
+        responseType: ResponseType.plain,
+        baseUrl: url.baseUrl
+    );
+  }
+
   static NotesDB instance = NotesDB._internal();
-  factory(){
+  factory NotesDB(){
     return instance;
   }
   //End Singleton
 
 
-
   final dio=Dio();
   final url=Url();
 
-  ValueNotifier<List<NoteModel>> noteListNotifier = ValueNotifier([]);
-
-  NotesDB(){
-    dio.options=BaseOptions(
-      responseType: ResponseType.plain,
-      baseUrl: url.baseUrl
-    );
-  }
 
   @override
   Future<NoteModel?> createNote(NoteModel value) async{
@@ -56,12 +56,12 @@ class NotesDB extends ApiCalls{
   Future<List<NoteModel>> getAllNotes() async{
 
     // print("Calling api------------");
-    final result = await dio.get("http://10.0.2.2:3000/note/getall");
+    final result = await dio.get(url.getAllNotes);
     // print("Called api------------");
-    // print(result);
+    print(result);
     print(dio.toString());
     if (result.data!=null){
-      final notesResponse=AllNotesModel.fromJson(result.data);
+      final notesResponse=AllNotesModel.fromJson(jsonDecode(result.data) as Map<String,dynamic>);
       noteListNotifier.value.clear();
       print("Note  response data");
       print(notesResponse.data);
