@@ -9,8 +9,7 @@ class ScreenDashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      final _noteList = await NotesDB.instance.getAllNotes();
-      // print(_noteList);
+      await NotesDB.instance.getAllNotes();
     });
 
     return Scaffold(
@@ -49,7 +48,7 @@ class NoteTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Open Note");
+        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> ScreenAddEditNote(type:ActionType.editNote,id: note.id,)));
       },
       child: Container(
           decoration: BoxDecoration(

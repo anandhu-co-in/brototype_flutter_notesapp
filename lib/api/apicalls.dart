@@ -17,6 +17,9 @@ abstract class ApiCalls{
 
 class NotesDB extends ApiCalls{
 
+  final dio=Dio();
+  final url=Url();
+
   ValueNotifier<List<NoteModel>> noteListNotifier = ValueNotifier([]);
 
   //Single Ton
@@ -34,8 +37,7 @@ class NotesDB extends ApiCalls{
   //End Singleton
 
 
-  final dio=Dio();
-  final url=Url();
+
 
 
   @override
@@ -90,6 +92,19 @@ class NotesDB extends ApiCalls{
 
   @override
   Future deleteNote(String id) async{
+
+  }
+
+
+  NoteModel? getNoteByID(String id){
+
+    try {
+      return noteListNotifier.value.firstWhere((note) => note.id == id);
+    }
+    catch (_){
+      //We if note not found above statement will fails, so we need to catch here like this
+      return null;
+    }
 
   }
 

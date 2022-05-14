@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 enum ActionType { addNote, editNote }
 
 class ScreenAddEditNote extends StatelessWidget {
-  final ActionType type = ActionType.addNote;
+  ActionType type = ActionType.addNote;
   String? id;
 
-  ScreenAddEditNote({Key? key}) : super(key: key);
+  ScreenAddEditNote({Key? key,required this.type,this.id}) : super(key: key);
 
   static const routeName = "add-transaction";
 
@@ -17,6 +17,25 @@ class ScreenAddEditNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    if(type==ActionType.editNote){
+
+      if(id==null){
+        Navigator.of(context).pop();
+      }
+      else{
+        final currentNote=NotesDB().getNoteByID(id!);
+        if(currentNote==null){
+          Navigator.of(context).pop();
+        }
+        else{
+          titleController.text=currentNote.title??'No Title';  //IF title is null then no title, i think ?? doese that
+          contentController.text=currentNote.content??'No Content';
+        }
+      }
+
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(type == ActionType.addNote ? 'Add Note' : 'Edit Note'),

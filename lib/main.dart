@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: ScreenDashBoard(),
-      routes: {ScreenAddEditNote.routeName: (ctx) => ScreenAddEditNote()}
+      routes: {ScreenAddEditNote.routeName: (ctx) => ScreenAddEditNote(type: ActionType.addNote,)}
     );
   }
 }
