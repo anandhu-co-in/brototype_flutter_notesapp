@@ -13,13 +13,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ScreenDashBoard(),
-      routes: {ScreenAddEditNote.routeName: (ctx) => ScreenAddEditNote(type: ActionType.addNote,)}
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: ScreenDashBoard(),
+        routes: {
+          ScreenAddEditNote.routeName: (ctx) => ScreenAddEditNote(
+                type: ActionType.addNote,
+              )
+        });
   }
 }

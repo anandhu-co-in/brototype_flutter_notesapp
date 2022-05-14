@@ -8,7 +8,7 @@ class ScreenAddEditNote extends StatelessWidget {
   ActionType type = ActionType.addNote;
   String? id;
 
-  ScreenAddEditNote({Key? key,required this.type,this.id}) : super(key: key);
+  ScreenAddEditNote({Key? key, required this.type, this.id}) : super(key: key);
 
   static const routeName = "add-transaction";
 
@@ -17,23 +17,19 @@ class ScreenAddEditNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    if(type==ActionType.editNote){
-
-      if(id==null){
+    if (type == ActionType.editNote) {
+      if (id == null) {
         Navigator.of(context).pop();
-      }
-      else{
-        final currentNote=NotesDB().getNoteByID(id!);
-        if(currentNote==null){
+      } else {
+        final currentNote = NotesDB().getNoteByID(id!);
+        if (currentNote == null) {
           Navigator.of(context).pop();
-        }
-        else{
-          titleController.text=currentNote.title??'No Title';  //IF title is null then no title, i think ?? doese that
-          contentController.text=currentNote.content??'No Content';
+        } else {
+          titleController.text = currentNote.title ??
+              'No Title'; //IF title is null then no title, i think ?? doese that
+          contentController.text = currentNote.content ?? 'No Content';
         }
       }
-
     }
 
     return Scaffold(
@@ -49,50 +45,48 @@ class ScreenAddEditNote extends StatelessWidget {
                         title: titleController.text,
                         content: contentController.text);
                     final result = await NotesDB().createNote(newNote);
-                    if(result!=null){
+                    if (result != null) {
                       print("Note Added");
                       Navigator.of(context).pop();
-                    }else{
-                      print("response null. Errordddddssss saving note");
+                    } else {
+                      print("Response null. Error while saving note");
                     }
                     break;
                   case ActionType.editNote:
-
                     final newNote = NoteModel.create(
                         id: id,
                         title: titleController.text,
                         content: contentController.text);
                     final result = await NotesDB().updateNote(newNote);
-                    if(result!=null){
+                    if (result != null) {
                       print("Note Edited");
                       Navigator.of(context).pop();
-                    }else{
-                      print("Errow while editint Note");
+                    } else {
+                      print("Error while Editing Note");
                     }
                     break;
-
                 }
               },
-              icon: Icon(Icons.save))
+              icon: const Icon(Icons.save))
         ],
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               TextFormField(
                 controller: titleController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Title'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               TextFormField(
                 controller: contentController,
                 maxLines: 4,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Content'),
               )
             ],

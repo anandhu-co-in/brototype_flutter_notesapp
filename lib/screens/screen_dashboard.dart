@@ -27,7 +27,8 @@ class ScreenDashBoard extends StatelessWidget {
               print(notemodels);
 
               List<Widget> notes = [AddNoteTile()];
-              notes.addAll(notemodels.reversed.map((e) => NoteTile(note: e)).toList());
+              notes.addAll(
+                  notemodels.reversed.map((e) => NoteTile(note: e)).toList());
 
               return GridView.count(
                   crossAxisCount: 2,
@@ -50,7 +51,11 @@ class NoteTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> ScreenAddEditNote(type:ActionType.editNote,id: note.id,)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) => ScreenAddEditNote(
+                  type: ActionType.editNote,
+                  id: note.id,
+                )));
       },
       child: Container(
           decoration: BoxDecoration(
