@@ -80,18 +80,53 @@ class NotesDB extends ApiCalls{
     }
   }
 
-
-
-
-
   @override
   Future<NoteModel?> updateNote(NoteModel value) async{
-    final result = await dio.put<NoteModel>(url.updateNote);
-    return NoteModel.fromJson(result.data as Map<String,dynamic>);
+
+    try{
+      final result = await dio.put(url.updateNote,data: value.toJson());
+
+      if(result.data==null){
+        return null;
+      }
+
+      final resultAsJson=jsonDecode(result.data);
+      final updatedNote=NoteModel.fromJson(resultAsJson as Map<String,dynamic>);
+      final index=noteListNotifier.value.indexWhere((element) => element.id==updatedNote.id);
+      if(index==-1) return null;
+      print("BEFORE----------------->");
+      print(noteListNotifier.value);
+      noteListNotifier.value.removeAt(index);
+      noteListNotifier.value.insert(index, updatedNote);
+      print(noteListNotifier.value);
+      noteListNotifier.notifyListeners();
+      print("AFTER INSERT----------------->");
+      return updatedNote;
+    }
+
+    on DioError catch(e){
+      print(e.response?.data);
+      return null;
+    }
+
   }
 
   @override
   Future deleteNote(String id) async{
+    try{
+      final result = await dio.delete(url.deleteNote.replaceFirst('{id}', id));
+      if(result.data==null){
+        return;
+      }
+      final index=noteListNotifier.value.indexWhere((element) => element.id==id);
+      if(index==-1) return null;
+      noteListNotifier.value.removeAt(index);
+      noteListNotifier.notifyListeners();
+    }
+    on DioError catch(e){
+      print(e.response?.data);
+      return null;
+    }
 
   }
 

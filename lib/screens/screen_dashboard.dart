@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:brototype_notes_app/api/apicalls.dart';
 import 'package:brototype_notes_app/note_model/note_model.dart';
 import 'package:brototype_notes_app/screens/screen_add_edit_note.dart';
@@ -72,6 +74,7 @@ class NoteTile extends StatelessWidget {
                   IconButton(
                       onPressed: () {
                         print("Clicked delete");
+                        NotesDB().deleteNote(note.id!);
                       },
                       icon: const Icon(
                         Icons.delete,

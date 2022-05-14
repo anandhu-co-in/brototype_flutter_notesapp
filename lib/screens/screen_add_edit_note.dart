@@ -57,8 +57,20 @@ class ScreenAddEditNote extends StatelessWidget {
                     }
                     break;
                   case ActionType.editNote:
-                    print("Edit Note Clicked");
+
+                    final newNote = NoteModel.create(
+                        id: id,
+                        title: titleController.text,
+                        content: contentController.text);
+                    final result = await NotesDB().updateNote(newNote);
+                    if(result!=null){
+                      print("Note Edited");
+                      Navigator.of(context).pop();
+                    }else{
+                      print("Errow while editint Note");
+                    }
                     break;
+
                 }
               },
               icon: Icon(Icons.save))

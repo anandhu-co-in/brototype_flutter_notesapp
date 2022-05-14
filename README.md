@@ -22,7 +22,14 @@ samples, guidance on mobile development, and a full API reference.
 
 tasks
 
-difference btw () and instance singleton related understand pleachhhhhh
-fix the dio error..............
-and valuenotifier issue
-and learn how to exit th vi(or watever ) editor
+difference btw () and instance singleton related understand pleachhhhhh  -- ok for now
+fix the dio error.............. FIXED
+and valuenotifier issue -- FIXED
+and learn how to exit th vi(or watever ) editor -- Pending
+
+
+Test once end to end-->
+Refractor Code-->
+Commend-->
+Test Once end to end-->
+Wrapup-->
